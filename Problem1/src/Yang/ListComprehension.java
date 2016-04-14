@@ -5,9 +5,8 @@ import java.util.stream.Collectors;
 
 public class ListComprehension {
 
-    public static void main(String[] args)
+    public static void main(String[] args) {
 
-    {
         ArrayList<List<Object>> emp = new ArrayList<List<Object>>();
         List<Object> headers = Arrays.asList("ID", "LAST_NAME", "FIRST_NAME","USERID","START_DATE","COMMENTS","TITLE","SALARY","COMMISSION","DEPT_ID","MANAGER_ID");
         List<Object> e1 = Arrays.asList(1, "Martin", "Carmen", "martincu", "03-MAY-90", "", "President", 4500, "", 50, "");
@@ -67,24 +66,40 @@ public class ListComprehension {
 
         System.out.println();
 
-        /*
+                /*
                 Alternative Methods - For Bonus
 
-        // select dept_id, avg(salary) from emp group by dept_id;
-        System.out.println("select dept_id, avg(salary) from emp group by dept_id;");
-        emp.stream().filter(e -> emp.indexOf(e) > 0).collect(Collectors.groupingBy(e -> e.get(9).toString())).entrySet().stream().map(kv -> kv.getValue())
-                .forEach(employeeList -> {
-                    double averageSalary = employeeList.stream().mapToDouble(e -> Double.parseDouble(e.get(7).toString())).average().getAsDouble();
-                    String dept_id = employeeList.get(0).get(9).toString();
-                    System.out.println(dept_id + " " + averageSalary);
+System.out.println("\nselect last_name, first_name, title, salary from s_emp where salary > (avg(salary) from s_emp) order by last_name: ");
+        double avgSalary = emp.stream()
+                .mapToInt(e -> (Integer) e.get(7))
+                .average()
+                .getAsDouble();
+
+        emp.stream()
+                .filter(e -> (Integer) e.get(7) > avgSalary)
+                .sorted((em1, em2) -> em1.get(1).toString().compareTo(em2.get(1).toString()))
+                .distinct()
+                .forEach(e -> {
+                    List<Object> eArray = Arrays.asList(e.get(1), e.get(2), e.get(6), e.get(7));
+                    System.out.println(eArray);
                 });
 
-        System.out.println();
+        System.out.println("\nselect dept_id, count(*) from s_emp group by dept_id order by dept_id: ");
+        emp.stream()
+                .map(e -> (Integer) e.get(9))
+                .distinct()
+                .sorted((dp1, dp2) -> Integer.compare(dp1, dp2))
+                .forEach(dp -> {
+                    Long count = emp.stream()
+                            .filter(e -> (Integer) e.get(9) == dp)
+                            .count();
 
-        // select distinct dept_id from emp order by dept_id;
-        System.out.println("select distinct dept_id from emp order by dept_id;");
-        emp.stream().filter(e -> emp.indexOf(e) > 0).map(e -> Integer.parseInt(e.get(9).toString())).distinct().sorted((dept1, dept2) -> Integer.compare(dept1, dept2)).forEach(e -> {System.out.println(e);});
+                    List<Object> dArray = Arrays.asList(dp, count);
+                    System.out.println(dArray);
+                });
+
          */
+
 
         // select dept_id, avg(salary) from emp group by dept_id;
         System.out.println("select dept_id, avg(salary) from emp group by dept_id;");
